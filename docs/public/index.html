@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/plugin-barman-cloud/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=plugin-barman-cloud/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.145.0">
+    <meta name="generator" content="Relearn 7.6.0">
+    <meta name="description" content="Status: EXPERIMENTAL
+Welcome to the codebase of the barman-cloud CNPG-I plugin for CloudNativePG.
+Table of contents Features Prerequisites Installation Usage WAL Archiving Backup Restore Replica clusters API Reference Prerequisites To use this plugin, ensure the following prerequisites are met:
+CloudNativePG version 1.25 or newer. cert-manager for enabling TLS communication between the plugin and the operator. Installation IMPORTANT NOTES:
+The plugin must be installed in the same namespace where the operator is installed (typically cnpg-system).">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Barman Cloud CNPG-I plugin">
+    <meta name="twitter:description" content="Status: EXPERIMENTAL
+Welcome to the codebase of the barman-cloud CNPG-I plugin for CloudNativePG.
+Table of contents Features Prerequisites Installation Usage WAL Archiving Backup Restore Replica clusters API Reference Prerequisites To use this plugin, ensure the following prerequisites are met:
+CloudNativePG version 1.25 or newer. cert-manager for enabling TLS communication between the plugin and the operator. Installation IMPORTANT NOTES:
+The plugin must be installed in the same namespace where the operator is installed (typically cnpg-system).">
+    <meta property="og:url" content="http://localhost:1313/plugin-barman-cloud/index.html">
+    <meta property="og:site_name" content="Barman Cloud CNPG-I plugin">
+    <meta property="og:title" content="Barman Cloud CNPG-I plugin">
+    <meta property="og:description" content="Status: EXPERIMENTAL
+Welcome to the codebase of the barman-cloud CNPG-I plugin for CloudNativePG.
+Table of contents Features Prerequisites Installation Usage WAL Archiving Backup Restore Replica clusters API Reference Prerequisites To use this plugin, ensure the following prerequisites are met:
+CloudNativePG version 1.25 or newer. cert-manager for enabling TLS communication between the plugin and the operator. Installation IMPORTANT NOTES:
+The plugin must be installed in the same namespace where the operator is installed (typically cnpg-system).">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="website">
+    <meta itemprop="name" content="Barman Cloud CNPG-I plugin">
+    <meta itemprop="description" content="Status: EXPERIMENTAL
+Welcome to the codebase of the barman-cloud CNPG-I plugin for CloudNativePG.
+Table of contents Features Prerequisites Installation Usage WAL Archiving Backup Restore Replica clusters API Reference Prerequisites To use this plugin, ensure the following prerequisites are met:
+CloudNativePG version 1.25 or newer. cert-manager for enabling TLS communication between the plugin and the operator. Installation IMPORTANT NOTES:
+The plugin must be installed in the same namespace where the operator is installed (typically cnpg-system).">
+    <meta itemprop="wordCount" content="736">
+    <title>Barman Cloud CNPG-I plugin</title>
+    <link href="/plugin-barman-cloud/index.xml" rel="alternate" type="application/rss+xml" title="Barman Cloud CNPG-I plugin">
+    <link href="/plugin-barman-cloud/fonts/fontawesome/css/fontawesome-all.min.css?1743168416" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/plugin-barman-cloud/fonts/fontawesome/css/fontawesome-all.min.css?1743168416" rel="stylesheet"></noscript>
+    <link href="/plugin-barman-cloud/css/perfect-scrollbar/perfect-scrollbar.min.css?1743168416" rel="stylesheet">
+    <link href="/plugin-barman-cloud/css/theme.css?1743168416" rel="stylesheet">
+    <link href="/plugin-barman-cloud/css/format-html.css?1743168416" rel="stylesheet" id="R-format-style">
+    <link href="/plugin-barman-cloud/css/auto-complete/auto-complete.min.css?1743168416" rel="stylesheet">
+    <script src="/plugin-barman-cloud/js/auto-complete/auto-complete.min.js?1743168416" defer></script>
+    <script src="/plugin-barman-cloud/js/lunr/lunr.min.js?1743168416" defer></script>
+    <script src="/plugin-barman-cloud/js/lunr/lunr.stemmer.support.min.js?1743168416" defer></script>
+    <script src="/plugin-barman-cloud/js/lunr/lunr.multi.min.js?1743168416" defer></script>
+    <script src="/plugin-barman-cloud/js/lunr/lunr.en.min.js?1743168416" defer></script>
+    <script src="/plugin-barman-cloud/js/search.js?1743168416" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/index.html';
+      window.relearn.relBasePath='.';
+      window.relearn.relBaseUri='..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313\/plugin-barman-cloud';
+      window.relearn.contentLangs=['en'];
+      window.relearn.index_js_url="/plugin-barman-cloud/searchindex.en.js?1743168416";
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/plugin-barman-cloud/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#table-of-contents">Table of contents</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#installation">Installation</a>
+      <ul>
+        <li><a href="#step-1---verify-the-prerequisites">Step 1 - Verify the Prerequisites</a></li>
+        <li><a href="#step-2---install-the-barman-cloud-plugin">Step 2 - Install the barman-cloud Plugin</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#defining-the-barmanobjectstore">Defining the <code>BarmanObjectStore</code></a></li>
+        <li><a href="#configuring-wal-archiving">Configuring WAL Archiving</a></li>
+        <li><a href="#performing-a-base-backup">Performing a Base Backup</a></li>
+        <li><a href="#restoring-a-cluster">Restoring a Cluster</a></li>
+        <li><a href="#configuring-replica-clusters">Configuring Replica Clusters</a></li>
+      </ul>
+    </li>
+    <li><a href="#api-reference">API Reference</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList">
+            <li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">Barman Cloud CNPG-I plugin</span><meta itemprop="position" content="1"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><span class="topbar-control"><i class="fa-fw fas fa-chevron-left"></i></span>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/plugin-barman-cloud/features/index.html" title="Features (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable home" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="home">
+  <header class="headline">
+  </header>
+
+<h1 id="barman-cloud-cnpg-i-plugin">Barman Cloud CNPG-I plugin</h1>
+
+<p><a href="https://cloudnative-pg.io/" rel="external" target="_blank"><a href="#R-image-ef4ac1f48a4fe1f804a6f753fc9d98fe" class="lightbox-link"><img alt="CloudNativePG" class="lazy lightbox figure-image" loading="lazy" src="/plugin-barman-cloud/logo/cloudnativepg.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ef4ac1f48a4fe1f804a6f753fc9d98fe"><img alt="CloudNativePG" class="lazy lightbox lightbox-image" loading="lazy" src="/plugin-barman-cloud/logo/cloudnativepg.png"></a></a></p>
+<p><strong>Status:</strong> EXPERIMENTAL</p>
+<p>Welcome to the codebase of the <a href="https://pgbarman.org/" rel="external" target="_blank">barman-cloud</a> CNPG-I
+plugin for <a href="https://cloudnative-pg.io/" rel="external" target="_blank">CloudNativePG</a>.</p>
+<h2 id="table-of-contents">Table of contents</h2>
+<ul>
+<li><a href="/plugin-barman-cloud/index.html#features">Features</a></li>
+<li><a href="/plugin-barman-cloud/index.html#prerequisites">Prerequisites</a></li>
+<li><a href="/plugin-barman-cloud/index.html#installation">Installation</a></li>
+<li><a href="/plugin-barman-cloud/index.html#usage">Usage</a>
+<ul>
+<li><a href="/plugin-barman-cloud/index.html#wal-archiving">WAL Archiving</a></li>
+<li><a href="/plugin-barman-cloud/index.html#backup">Backup</a></li>
+<li><a href="/plugin-barman-cloud/index.html#restore">Restore</a></li>
+<li><a href="/plugin-barman-cloud/index.html#replica-clusters">Replica clusters</a></li>
+</ul>
+</li>
+<li><a href="/plugin-barman-cloud/index.html#api-reference">API Reference</a></li>
+</ul>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>To use this plugin, ensure the following prerequisites are met:</p>
+<ul>
+<li><a href="https://cloudnative-pg.io" rel="external" target="_blank"><strong>CloudNativePG</strong></a> version <strong>1.25</strong> or newer.</li>
+<li><a href="https://cert-manager.io/" rel="external" target="_blank"><strong>cert-manager</strong></a> for enabling <strong>TLS communication</strong> between the plugin and the operator.</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p><strong>IMPORTANT NOTES:</strong></p>
+<ol>
+<li>
+<p>The plugin <strong>must</strong> be installed in the same namespace where the operator is
+installed (typically <code>cnpg-system</code>).</p>
+</li>
+<li>
+<p>Be aware that the operator&rsquo;s <strong>listening namespaces</strong> may differ from its
+installation namespace. Ensure you verify this distinction to avoid
+configuration issues.</p>
+</li>
+</ol>
+<p>Here’s an enhanced version of your instructions for verifying the prerequisites:</p>
+<h3 id="step-1---verify-the-prerequisites">Step 1 - Verify the Prerequisites</h3>
+<p>If CloudNativePG is installed in the default <code>cnpg-system</code> namespace, verify its version using the following command:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl get deployment -n cnpg-system cnpg-controller-manager -o yaml <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  | grep ghcr.io/cloudnative-pg/cloudnative-pg</span></span></code></pre></div>
+<p>Example output:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code class="language-output" data-lang="output">image: ghcr.io/cloudnative-pg/cloudnative-pg:1.25.0</code></pre></div>
+<p>Ensure that the version displayed is <strong>1.25</strong> or newer.</p>
+<p>Then, use the <a href="https://cert-manager.io/docs/reference/cmctl/#installation" rel="external" target="_blank">cmctl</a>
+tool to confirm that <code>cert-manager</code> is correctly installed:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmctl check api</span></span></code></pre></div>
+<p>Example output:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code class="language-output" data-lang="output">The cert-manager API is ready</code></pre></div>
+<p>Both checks are necessary to proceed with the installation.</p>
+<h3 id="step-2---install-the-barman-cloud-plugin">Step 2 - Install the barman-cloud Plugin</h3>
+<p>Use <code>kubectl</code> to apply the manifest for the latest commit in the <code>main</code> branch:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl apply -f <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  https://github.com/cloudnative-pg/plugin-barman-cloud/releases/download/v0.2.0/manifest.yaml</span></span></code></pre></div>
+<p>Example output:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code class="language-output" data-lang="output">customresourcedefinition.apiextensions.k8s.io/objectstores.barmancloud.cnpg.io created
+serviceaccount/plugin-barman-cloud created
+role.rbac.authorization.k8s.io/leader-election-role created
+clusterrole.rbac.authorization.k8s.io/metrics-auth-role created
+clusterrole.rbac.authorization.k8s.io/metrics-reader created
+clusterrole.rbac.authorization.k8s.io/objectstore-editor-role created
+clusterrole.rbac.authorization.k8s.io/objectstore-viewer-role created
+clusterrole.rbac.authorization.k8s.io/plugin-barman-cloud created
+rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-auth-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/plugin-barman-cloud-binding created
+secret/plugin-barman-cloud-8tfddg42gf created
+service/barman-cloud created
+deployment.apps/barman-cloud configured
+certificate.cert-manager.io/barman-cloud-client created
+certificate.cert-manager.io/barman-cloud-server created
+issuer.cert-manager.io/selfsigned-issuer created</code></pre></div>
+<p>After these steps, the plugin will be successfully installed. Make sure it is
+ready to use by checking the deployment status as follows:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl rollout status deployment <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -n cnpg-system barman-cloud</span></span></code></pre></div>
+<p>Example output:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code class="language-output" data-lang="output">deployment &#34;barman-cloud&#34; successfully rolled out</code></pre></div>
+<p>This confirms that the plugin is deployed and operational.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="defining-the-barmanobjectstore">Defining the <code>BarmanObjectStore</code></h3>
+<p>A <code>BarmanObjectStore</code> object should be created for each object store used in
+your PostgreSQL architecture. Below is an example configuration for using
+MinIO:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">barmancloud.cnpg.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ObjectStore</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio-store</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">configuration</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">destinationPath</span>: <span style="color:#ae81ff">s3://backups/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">endpointURL</span>: <span style="color:#ae81ff">http://minio:9000</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">s3Credentials</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">accessKeyId</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">key</span>: <span style="color:#ae81ff">ACCESS_KEY_ID</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">secretAccessKey</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">minio</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">key</span>: <span style="color:#ae81ff">ACCESS_SECRET_KEY</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">wal</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">compression</span>: <span style="color:#ae81ff">gzip</span></span></span></code></pre></div>
+<p>The <code>.spec.configuration</code> API follows the same schema as the
+<a href="https://pkg.go.dev/github.com/cloudnative-pg/barman-cloud/pkg/api#BarmanObjectStoreConfiguration" rel="external" target="_blank">in-tree barman-cloud support</a>.
+Refer to <a href="https://cloudnative-pg.io/documentation/preview/backup_barmanobjectstore/" rel="external" target="_blank">the CloudNativePG documentation</a>
+for detailed usage.</p>
+<h3 id="configuring-wal-archiving">Configuring WAL Archiving</h3>
+<p>Once the <code>BarmanObjectStore</code> is defined, you can configure a PostgreSQL cluster
+to archive WALs by referencing the store in the <code>.spec.plugins</code> section, as
+shown below:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">postgresql.cnpg.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-example</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">instances</span>: <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">Always</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">plugins</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">isWALArchiver</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">barmanObjectName</span>: <span style="color:#ae81ff">minio-store</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storage</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">size</span>: <span style="color:#ae81ff">1Gi</span></span></span></code></pre></div>
+<p>This configuration enables both WAL archiving and data directory backups.</p>
+<h3 id="performing-a-base-backup">Performing a Base Backup</h3>
+<p>Once WAL archiving is enabled, the cluster is ready for backups. To create a
+backup, configure the <code>backup.spec.pluginConfiguration</code> section to specify this
+plugin:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">postgresql.cnpg.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Backup</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">backup-example</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">method</span>: <span style="color:#ae81ff">plugin</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">cluster</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-example</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pluginConfiguration</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span></span></span></code></pre></div>
+<h3 id="restoring-a-cluster">Restoring a Cluster</h3>
+<p>To restore a cluster from an object store, create a new <code>Cluster</code> resource that
+references the store containing the backup. Below is an example configuration:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">postgresql.cnpg.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-restore</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">instances</span>: <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">bootstrap</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">recovery</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">source</span>: <span style="color:#ae81ff">source</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">externalClusters</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">source</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">plugin</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">barmanObjectName</span>: <span style="color:#ae81ff">minio-store</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">serverName</span>: <span style="color:#ae81ff">cluster-example</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storage</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">size</span>: <span style="color:#ae81ff">1Gi</span></span></span></code></pre></div>
+<p><strong>NOTE:</strong> The above configuration does <strong>not</strong> enable WAL archiving for the
+restored cluster.</p>
+<p>To enable WAL archiving for the restored cluster, include the <code>.spec.plugins</code>
+section alongside the <code>externalClusters.plugin</code> section, as shown below:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">postgresql.cnpg.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-restore</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">instances</span>: <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">bootstrap</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">recovery</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">source</span>: <span style="color:#ae81ff">source</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">plugins</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">isWALArchiver</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Backup Object Store (push, read-write)</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">barmanObjectName</span>: <span style="color:#ae81ff">minio-store-bis</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">externalClusters</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">source</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">plugin</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Recovery Object Store (pull, read-only)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">barmanObjectName</span>: <span style="color:#ae81ff">minio-store</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">serverName</span>: <span style="color:#ae81ff">cluster-example</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storage</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">size</span>: <span style="color:#ae81ff">1Gi</span></span></span></code></pre></div>
+<p>The same object store may be used for both transaction log archiving and
+restoring a cluster, or you can configure separate stores for these purposes.</p>
+<h3 id="configuring-replica-clusters">Configuring Replica Clusters</h3>
+<p>You can set up a distributed topology by combining the previously defined
+configurations with the <code>.spec.replica</code> section. Below is an example of how to
+define a replica cluster:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">postgresql.cnpg.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Cluster</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-dc-a</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">instances</span>: <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">primaryUpdateStrategy</span>: <span style="color:#ae81ff">unsupervised</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storage</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">storageClass</span>: <span style="color:#ae81ff">csi-hostpath-sc</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">size</span>: <span style="color:#ae81ff">1Gi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">plugins</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">isWALArchiver</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">barmanObjectName</span>: <span style="color:#ae81ff">minio-store-a</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">replica</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">self</span>: <span style="color:#ae81ff">cluster-dc-a</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">primary</span>: <span style="color:#ae81ff">cluster-dc-a</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">source</span>: <span style="color:#ae81ff">cluster-dc-b</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">externalClusters</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-dc-a</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">plugin</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">barmanObjectName</span>: <span style="color:#ae81ff">minio-store-a</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-dc-b</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">plugin</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">barman-cloud.cloudnative-pg.io</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">barmanObjectName</span>: <span style="color:#ae81ff">minio-store-b</span></span></span></code></pre></div>
+<h2 id="api-reference">API Reference</h2>
+<p>You can find the API reference on its
+<a href="./docs/src/plugin-barman-cloud.v1.md">dedicated page</a>.</p>
+
+  <footer class="footline">
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/plugin-barman-cloud/index.html">
+            <div class="logo-title">Barman Cloud CNPG-I plugin</div>
+          </a>
+        </div>
+        <search><form action="/plugin-barman-cloud/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+            <li class="active " data-nav-id="/plugin-barman-cloud/index.html"><a class="padding" href="/plugin-barman-cloud/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-controls">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-home">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/plugin-barman-cloud/features/index.html"><a class="padding" href="/plugin-barman-cloud/features/index.html">Features</a></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-controls">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/plugin-barman-cloud/js/clipboard/clipboard.min.js?1743168416" defer></script>
+    <script src="/plugin-barman-cloud/js/perfect-scrollbar/perfect-scrollbar.min.js?1743168416" defer></script>
+    <script src="/plugin-barman-cloud/js/theme.js?1743168416" defer></script>
+  </body>
+</html>

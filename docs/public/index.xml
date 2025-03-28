@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Barman Cloud CNPG-I plugin</title>
+    <link>http://localhost:1313/plugin-barman-cloud/index.html</link>
+    <description>Status: EXPERIMENTAL&#xA;Welcome to the codebase of the barman-cloud CNPG-I plugin for CloudNativePG.&#xA;Table of contents Features Prerequisites Installation Usage WAL Archiving Backup Restore Replica clusters API Reference Prerequisites To use this plugin, ensure the following prerequisites are met:&#xA;CloudNativePG version 1.25 or newer. cert-manager for enabling TLS communication between the plugin and the operator. Installation IMPORTANT NOTES:&#xA;The plugin must be installed in the same namespace where the operator is installed (typically cnpg-system).</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/plugin-barman-cloud/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Features</title>
+      <link>http://localhost:1313/plugin-barman-cloud/features/index.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/plugin-barman-cloud/features/index.html</guid>
+      <description>This plugin enables continuous backup to object storage for a PostgreSQL cluster using the barman-cloud tool suite.&#xA;The features provided by this plugin are:&#xA;Data Directory Backup Data Directory Restore WAL Archiving WAL Restoring Point-in-Time Recovery (PITR) Replica Clusters This plugin is compatible with all object storage services supported by barman-cloud, including:&#xA;Amazon AWS S3 Google Cloud Storage Microsoft Azure Blob Storage The following storage solutions have been tested and confirmed to work with this implementation:</description>
+    </item>
+  </channel>
+</rss>

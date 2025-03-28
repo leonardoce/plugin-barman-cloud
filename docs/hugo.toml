@@ -1,0 +1,7 @@
+baseURL = 'https://cloudnative-pg.github.io/plugin-barman-cloud/'
+languageCode = 'en-us'
+title = 'Barman Cloud CNPG-I plugin'
+
+[module]
+  [[module.imports]]
+    path = 'github.com/McShelby/hugo-theme-relearn'
