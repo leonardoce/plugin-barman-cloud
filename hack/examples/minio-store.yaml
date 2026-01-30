@@ -7,13 +7,6 @@ spec:
   instanceSidecarConfiguration:
     logLevel: "debug"
     retentionPolicyIntervalSeconds: 1800
-    resources:
-      requests:
-        memory: "64Mi"
-        cpu: "250m"
-      limits:
-        memory: "512Mi"
-        cpu: "500m"
   configuration:
     endpointCA:
       name: minio-server-tls
