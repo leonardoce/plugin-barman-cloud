@@ -191,16 +191,30 @@ func NewFromCluster(cluster *cnpgv1.Cluster) *PluginConfiguration {
 }
 
 func getRecoveryParameters(cluster *cnpgv1.Cluster) map[string]string {
-	recoveryPluginConfiguration := getRecoverySourcePlugin(cluster)
-	if recoveryPluginConfiguration == nil {
-		return nil
+	if recoveryPluginConfiguration := getRecoverySourcePlugin(cluster); recoveryPluginConfiguration != nil &&
+		recoveryPluginConfiguration.Name == metadata.PluginName {
+		return recoveryPluginConfiguration.Parameters
 	}
 
-	if recoveryPluginConfiguration.Name != metadata.PluginName {
+	// When this plugin is elected to bootstrap new replicas, recovery is
+	// performed from the cluster's own backup pipeline, so reuse the
+	// cluster's plugin parameters. This only applies once the cluster has
+	// at least one running instance — before that, the cluster is still in
+	// its initial bootstrap phase and there are no backups to recover from.
+	if cluster.Status.Instances == 0 {
 		return nil
 	}
+	if replicaBootstrap := cluster.Spec.ReplicaBootstrap; replicaBootstrap != nil &&
+		replicaBootstrap.Recovery != nil &&
+		replicaBootstrap.Recovery.PluginName == metadata.PluginName {
+		for _, plugin := range cluster.Spec.Plugins {
+			if plugin.IsEnabled() && plugin.Name == metadata.PluginName {
+				return plugin.Parameters
+			}
+		}
+	}
 
-	return recoveryPluginConfiguration.Parameters
+	return nil
 }
 
 func getReplicaSourceParameters(cluster *cnpgv1.Cluster) map[string]string {

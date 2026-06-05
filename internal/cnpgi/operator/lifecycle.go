@@ -171,7 +171,7 @@ func reconcileJob(
 	config sidecarConfiguration,
 ) (*lifecycle.OperatorLifecycleResponse, error) {
 	contextLogger := log.FromContext(ctx).WithName("lifecycle")
-	if pluginConfig := cluster.GetRecoverySourcePlugin(); pluginConfig == nil || pluginConfig.Name != metadata.PluginName {
+	if !clusterUsesPluginForRecovery(cluster) {
 		contextLogger.Debug("cluster does not use the this plugin for recovery, skipping")
 		return nil, nil
 	}
@@ -628,6 +628,24 @@ func removeVolumeMount(mounts []corev1.VolumeMount, name string) []corev1.Volume
 		}
 	}
 	return filteredMounts
+}
+
+// clusterUsesPluginForRecovery reports whether the cluster is configured to use
+// this plugin as the source for either a full cluster recovery bootstrap or a
+// replica bootstrap.
+func clusterUsesPluginForRecovery(cluster *cnpgv1.Cluster) bool {
+	if pluginConfig := cluster.GetRecoverySourcePlugin(); pluginConfig != nil &&
+		pluginConfig.Name == metadata.PluginName {
+		return true
+	}
+
+	if replicaBootstrap := cluster.Spec.ReplicaBootstrap; replicaBootstrap != nil &&
+		replicaBootstrap.Recovery != nil &&
+		replicaBootstrap.Recovery.PluginName == metadata.PluginName {
+		return true
+	}
+
+	return false
 }
 
 // getCNPGJobRole gets the role associated to a CNPG job

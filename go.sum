@@ -22,8 +22,6 @@ github.com/cloudnative-pg/api v1.29.1 h1:FWr8S7EQeOfdhYXyr2cof8wUXLARZiiQt5Qa6lt
 github.com/cloudnative-pg/api v1.29.1/go.mod h1:QtWF3yzSvIfORMHaSkPAk/o3bhCJwEHJgN3riyRiz3o=
 github.com/cloudnative-pg/barman-cloud v0.5.2-0.20260619084538-8d9302e232e7 h1:lNWqibnwlJesDrwAukg8gQF4Hpys3jx31LaXZFoP9vA=
 github.com/cloudnative-pg/barman-cloud v0.5.2-0.20260619084538-8d9302e232e7/go.mod h1:vmW7blcg0BECd/9YKqn7NdiF7jz9BlXCWJcGJpzzBCg=
-github.com/cloudnative-pg/cloudnative-pg v1.29.1 h1:ZNEt1TMlnQKXI1kho2UqQuqdfvIvjGln4kN7C1lsmGA=
-github.com/cloudnative-pg/cloudnative-pg v1.29.1/go.mod h1:Sbgx9jVmkle4/gR2U5JHrzDd74sRPOBHDtPkvncg5v8=
 github.com/cloudnative-pg/cnpg-i v0.5.0 h1:/TOzpNT6cwNgrpftTtrnLKdoHgMwd+88vZgXjlVgXeE=
 github.com/cloudnative-pg/cnpg-i v0.5.0/go.mod h1:7Gh4+UzhBpGhr4DreB1GN9wGYfvxwXCXZUyVt3zE/3I=
 github.com/cloudnative-pg/cnpg-i-machinery v0.4.2 h1:0reS9MtyLYINHXQ/MfxJ9jp39hhBf8e3Qdj+T5Nsq6I=
@@ -143,6 +141,8 @@ github.com/kubernetes-csi/external-snapshotter/client/v8 v8.4.0 h1:bMqrb3UHgHbP+
 github.com/kubernetes-csi/external-snapshotter/client/v8 v8.4.0/go.mod h1:E3vdYxHj2C2q6qo8/Da4g7P+IcwqRZyy3gJBzYybV9Y=
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
+github.com/leonardoce/cloudnative-pg v0.0.0-20260605145323-8174f537b696 h1:EN+iDRVXzydWlt6TczcUetsLgexp9LiVcWxIOUOUZC4=
+github.com/leonardoce/cloudnative-pg v0.0.0-20260605145323-8174f537b696/go.mod h1:ss+B9RhPpUqAz3uQEercSW0XC3dCZVR49h4h/BFrFXg=
 github.com/lib/pq v1.12.3 h1:tTWxr2YLKwIvK90ZXEw8GP7UFHtcbTtty8zsI+YjrfQ=
 github.com/lib/pq v1.12.3/go.mod h1:/p+8NSbOcwzAEI7wiMXFlgydTwcgTr3OSKMsD2BitpA=
 github.com/maruel/natural v1.1.1 h1:Hja7XhhmvEFhcByqDoHz9QZbkWey+COd9xWfCfn1ioo=

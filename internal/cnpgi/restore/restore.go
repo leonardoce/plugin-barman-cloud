@@ -102,7 +102,7 @@ func (impl JobHookImpl) Restore(
 		return nil, err
 	}
 
-	if configuration.BarmanObjectName != "" {
+	if configuration.BarmanObjectName != "" && configuration.Cluster.Status.ReadyInstances == 0 {
 		var targetObjectStore barmancloudv1.ObjectStore
 		if err := impl.Client.Get(ctx, configuration.GetBarmanObjectKey(), &targetObjectStore); err != nil {
 			return nil, err
